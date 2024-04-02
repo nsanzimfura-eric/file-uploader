@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# File Uploader
+
+File Uploader is a web application built with Next.js 14.0.0, designed to simplify the process of uploading files to a cloud storage service. It leverages the full-stack capabilities of Next.js to provide a seamless file uploading experience, including real-time feedback on upload progress, success, and failure notifications, as well as the ability to manage uploaded files
+
+## Features
+
+- `File Upload:` Users can upload files up to 5MB in size. For files larger than this limit, the application displays a modal indicating the file is too large.
+- `Real-Time Notifications:` The app integrates with third-party APIs to send notifications at the start of an upload, upon success, and in case of failure.
+- `File Management:` Users can view a list of uploaded files, download them, rename them through a modal interface, or delete them.
+- `Persistence:` The state of uploaded files persists across page refreshes, ensuring data isn't lost.
+- `UI Feedback:` Displays a skeleton UI when the list of files is loading, enhancing the user experience.
+- `Error Handling:` Implements error boundaries to catch and display errors gracefully.
 
 ## Getting Started
 
-First, run the development server:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Installation
+
+1.Clone the repository:
+
+```bash
+https://github.com/nsanzimfura-eric/file-uploader.git
+```
+
+2.Navigate into the project directory:
+
+```bash
+cd file-uploader
+```
+
+3.Install the dependencies:
+
+```bash
+npm i
+```
+
+### Running the project
+
+4.Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5.Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To upload a file, simply click the "Upload File" button and select a file from your computer. If the file is larger than `5MB`, a modal will inform you of the limitation. Upon a successful upload, the file will appear in the list below, where you can download, rename, or delete it.
 
-## Learn More
+## Technologies
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Next.js 14.0.0
+- Vercel's Blob Storage
+- shadcn/ui
+- TypeScript
+- Tailwind-CSS
+- CSS
