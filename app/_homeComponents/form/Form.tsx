@@ -6,13 +6,22 @@ import React, { useRef, useState } from "react";
 import { initialValues, validationSchema, validateFileSize } from './validationiSchama'
 import { useFormik } from "formik";
 import FeedbackNotification from "@/components/pageComponents/FeedBackNotification";
+import { useFormState, useFormStatus } from "react-dom";
+import uploadFile from "@/server-actions/file/UploadFile";
 
 
 
 const Form = () => {
+    const initialState = {
+        message: ''
+    }
+
     const UploadRef = useRef<HTMLInputElement>(null);
     const [editFileName, setEditFileName] = useState(true);
     const [fileExtension, setFileExtension] = useState<string | null>(null);
+    const [state, uploadFileAction] = useFormState(uploadFile, initialState);
+    const { pending: uploadLoading } = useFormStatus();
+
 
     //use global form to access all the form values
     const formik = useFormik({
@@ -27,14 +36,6 @@ const Form = () => {
         UploadRef.current?.click();
     }
 
-    const saveFile = async (formData: FormData) => {
-        //validate form first
-        formik.handleSubmit();
-        const file: File = await formData.get('file') as File;
-        const fileName: string = await formData.get('fileName') as string;
-        console.log(file, fileName);
-    }
-
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
         if (file) {
@@ -44,11 +45,11 @@ const Form = () => {
             } else {//no error
                 formik.setFieldValue("file", file);
                 //set file name
-                const nameArray = file?.name?.split('.');
-                const extension = nameArray[nameArray.length - 1];
+                const fileParts = file.name.split('.');
+                const extension = fileParts.pop() as string;
+                const fileName = fileParts.join('.');
                 setFileExtension(extension);
-                const name = nameArray.filter(str => str !== extension).join('.');
-                formik.setFieldValue("fileName", name);
+                formik.setFieldValue("fileName", fileName);
             }
         }
     }
@@ -58,11 +59,12 @@ const Form = () => {
     }
 
     const onlyValidateForm = () => {
+        //validate Form first
         formik.validateForm();
     }
 
     return (
-        <form action={saveFile} className='bg-none flex flex-col items-center gap-1' onSubmit={onlyValidateForm}>
+        <form action={uploadFileAction} className='bg-none flex flex-col items-center gap-1' onSubmit={onlyValidateForm}>
             <div className="bg-none flex items-center gap-6 p-0 m-0 max-w-[100%]">
                 <input
                     type="file"
@@ -110,7 +112,7 @@ const Form = () => {
                         </div>
                     }
                 </div>
-                <button type="submit" className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
+                <button type="submit" aria-disabled={uploadLoading} className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
             </div>
             {formik.errors &&
                 <div className="m-0 p-0 w-full flex justify-start items-start flex-col">
