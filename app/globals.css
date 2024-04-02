@@ -9,6 +9,14 @@
     --foreground-rgb: #011340;
     --background-start-rgb: #EBEBEB;
     --background-end-rgb: #DCE5F2;
+    --transition: all .5s ease-in-out;
+
+    --error: #FF0000;
+    --error-light: hsla(0, 100%, 73%, 36%);
+    --success: #2B5708;
+    --success-light: hsla(126, 70%, 82%, 36%);
+    --info: #1B5CBE;
+    --info-light: hsla(198, 79%, 79%, 34%);
 
     --card: #151924;
     --card-foreground: #89a7ff;
@@ -41,6 +49,7 @@
 @layer base {
   * {
     @apply border-border;
+    transition: all .5s ease-in-out;
   }
   body {
     @apply bg-background text-foreground;

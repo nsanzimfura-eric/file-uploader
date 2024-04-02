@@ -18,6 +18,10 @@ const config = {
       },
     },
     extend: {
+      transitionDuration: {
+        "400": "400ms",
+        "600": "600ms",
+      },
       colors: {
         border: "var(--border)",
         input: "var(--input)",
@@ -51,6 +55,18 @@ const config = {
         bgNav: {
           DEFAULT: "var(--bgColor)",
           foreground: "var(--bgColorF)",
+        },
+        error: {
+          DEFAULT: "var(--error)",
+          light: "var(--error-light)",
+        },
+        info: {
+          DEFAULT: "var(--info)",
+          light: "var(--info-light)",
+        },
+        success: {
+          DEFAULT: "var(--success)",
+          light: "var(--success-light)",
         },
       },
       borderRadius: {
