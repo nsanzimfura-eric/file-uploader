@@ -22,9 +22,6 @@
     --secondary: #DDEAFB;
     --secondary-foreground: #EBEBEB;
 
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-
     --accent: #aaaaaa86;
     --accent-foreground: #88858596;
 
@@ -51,7 +48,8 @@
     color: rgb(var(--foreground-rgb));
     background-color: var(--background-end-rgb);
     overflow: hidden;
-    height: 100vh;
+    overflow-y: auto;
+    min-height: 100vh;
     width: 100vw;
     padding: 0;
     margin: 0;
