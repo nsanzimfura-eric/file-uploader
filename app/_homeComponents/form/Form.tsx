@@ -10,9 +10,13 @@ import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
 
 
+export interface DataFilesProps {
+    message: string,
+    data?: any
+}
 
 const Form = () => {
-    const initialState = {
+    const initialState: DataFilesProps = {
         message: ''
     }
 

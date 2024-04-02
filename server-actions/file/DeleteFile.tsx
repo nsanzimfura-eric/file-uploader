@@ -1,9 +1,10 @@
 "use server";
 
+import { DataFilesProps } from "@/app/_homeComponents/form/Form";
 import { frontendRoutes } from "@/vendor/frontendRoutes";
 import { revalidatePath } from "next/cache";
 
-const deleteFile = async (prevState: { message: string }, formData: FormData): Promise<{ message: string }> => {
+const deleteFile = async (prevState: DataFilesProps, formData: FormData): Promise<DataFilesProps> => {
     try {
 
 
