@@ -1,3 +1,5 @@
+"use server";
+
 import { frontendRoutes } from "@/vendor/frontendRoutes";
 import { revalidatePath } from "next/cache";
 
@@ -16,7 +18,7 @@ const uploadFile = async (prevState: { message: string }, formData: FormData): P
         return { message: `File: ${fullName} Uploaded Successfully` };
     } catch (error) {
         console.log(error)
-        return { message: "Failed to delete todo" };
+        return { message: "Failed to upload File" };
     }
 };
 

@@ -1,3 +1,5 @@
+"use server";
+
 import { frontendRoutes } from "@/vendor/frontendRoutes";
 import { revalidatePath } from "next/cache";
 

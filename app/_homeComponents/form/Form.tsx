@@ -122,6 +122,9 @@ const Form = () => {
                     {formik.errors.fileName &&
                         <FeedbackNotification title="Error" type="error" message={formik.errors.fileName} />
                     }
+                    {initialState.message !== '' &&
+                        <FeedbackNotification title="Upload Feedback" type="info" message={initialState.message} />
+                    }
                 </div>}
         </form>
     );
