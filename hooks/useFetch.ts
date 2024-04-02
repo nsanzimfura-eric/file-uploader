@@ -18,8 +18,8 @@ const useFetchData = () => {
         mode: "no-cors",
       };
       console.log(token);
-      // const { blobs } = await list(options);
-      // setData(blobs);
+      const { blobs } = await list(options);
+      setData(blobs);
     } catch (err: any) {
       setError(err);
       console.error(err);
