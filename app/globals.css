@@ -4,8 +4,11 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --background: #DCE5F2;
+    --foreground: #011340;
+    --foreground-rgb: #011340;
+    --background-start-rgb: #EBEBEB;
+    --background-end-rgb: #DCE5F2;
 
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -72,5 +75,27 @@
   }
   body {
     @apply bg-background text-foreground;
+    background: none;
+    color: rgb(var(--foreground-rgb));
+    background-color: var(--background-end-rgb);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+  }
+  .bg-img{
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: -1;
+    background-image: url('../public/Coverbg.svg');
+    opacity: 0.2;
+    margin: 0;
+    padding: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
