@@ -20,7 +20,7 @@ const useFetchData = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 400);
+      }, 4000);
     }
   };
 

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/alert"
 import { useEffect, useState } from "react";
 
-type TitleType = 'error' | 'info' | 'success';
+export type TitleType = 'error' | 'info' | 'success';
 interface FeedbackNotificationProps {
     message: string
     type?: TitleType;

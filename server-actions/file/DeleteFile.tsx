@@ -9,10 +9,12 @@ const deleteFile = async (prevState: DataFilesProps, formData: FormData): Promis
 
 
         revalidatePath(frontendRoutes.home);
-        return { message: 'File deleted Successfully' };
+
+        prevState.message = 'File deleted Successfully'
+        return prevState;
     } catch (error) {
         console.log(error)
-        return { message: "Failed to delete file" };
+        return { message: "Failed to delete file", type: 'error' };
     }
 };
 

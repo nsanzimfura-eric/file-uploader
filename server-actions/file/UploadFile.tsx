@@ -13,7 +13,6 @@ const uploadFile = async (prevState: DataFilesProps, formData: FormData): Promis
     const extension = returnFileExtension(file.name);
     const fullName = `${fileName}.${extension}`;
     const newFile = { ...file, name: fullName, }
-
     try {
         const blob = await put(fileName, newFile, {
             access: 'public',
@@ -21,11 +20,15 @@ const uploadFile = async (prevState: DataFilesProps, formData: FormData): Promis
 
         revalidatePath(frontendRoutes.home);
 
-        return { message: `File: ${fullName} Uploaded Successfully`, data: NextResponse.json(blob) };
+        prevState.data = NextResponse.json(blob);
+        prevState.message = `File: ${fullName} Uploaded Successfully`;
+
+
+        return prevState;
 
     } catch (error) {
         console.log(error)
-        return { message: "Failed to upload File" };
+        return { message: "Failed to upload File", type: 'error' };
     }
 };
 

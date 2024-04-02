@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, { useRef, useState } from "react";
 import { initialValues, validationSchema, validateFileSize } from './validationiSchama'
 import { useFormik } from "formik";
-import FeedbackNotification from "@/components/pageComponents/FeedBackNotification";
+import FeedbackNotification, { TitleType } from "@/components/pageComponents/FeedBackNotification";
 import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
 import { returnFileExtension } from "@/helpers/returnFileExtension";
@@ -13,12 +13,14 @@ import { returnFileExtension } from "@/helpers/returnFileExtension";
 
 export interface DataFilesProps {
     message: string,
-    data?: any
+    data?: any,
+    type: TitleType;
 }
 
 const Form = () => {
     const initialState: DataFilesProps = {
-        message: ''
+        message: '',
+        type: 'success',
     }
 
     const UploadRef = useRef<HTMLInputElement>(null);
@@ -128,7 +130,7 @@ const Form = () => {
                         <FeedbackNotification title="Error" type="error" message={formik.errors.fileName} />
                     }
                     {state.message !== '' &&
-                        <FeedbackNotification title="Upload Feedback" type="info" message={state.message} />
+                        <FeedbackNotification title="Upload Feedback" type={state.type} message={state.message} />
                     }
                 </div>}
         </form>
