@@ -1,5 +1,5 @@
 'use client'
-import { AlertCircle } from "lucide-react"
+
 import {
     Alert,
     AlertDescription,
@@ -17,7 +17,8 @@ interface FeedbackNotificationProps {
 const FeedbackNotification = (props: FeedbackNotificationProps) => {
     const { message, title, type = 'success' } = props;
     const [classNames, setClassNames] = useState('text-success')
-    const [classNamesMaster, setClassNamesMaster] = useState('bg-success-light text-success')
+    const [classNamesMaster, setClassNamesMaster] = useState('bg-success-light text-success');
+
 
     useEffect(() => {
         switch (type) {
@@ -36,9 +37,9 @@ const FeedbackNotification = (props: FeedbackNotificationProps) => {
         }
     }, [type]);
 
+
     return (
         <Alert variant="destructive" className={`${classNamesMaster} rounded-[10px] w-full p-[20px] border-none`}>
-            <AlertCircle className="h-4 w-4 bg-none" />
             <AlertTitle className={`${classNames} bg-none font-bold`}>{title}</AlertTitle>
             <AlertDescription className={`${classNames} bg-none`}>
                 {message}

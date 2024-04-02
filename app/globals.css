@@ -77,4 +77,9 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
+  #fileName, #fileName:focus{
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
 }

@@ -2,15 +2,17 @@
 
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { initialValues, validationSchema, validateFileSize } from './validationiSchama'
 import { useFormik } from "formik";
 import FeedbackNotification from "@/components/pageComponents/FeedBackNotification";
 
 
+
 const Form = () => {
     const UploadRef = useRef<HTMLInputElement>(null);
-
+    const [editFileName, setEditFileName] = useState(true);
+    const [fileExtension, setFileExtension] = useState<string | null>(null);
 
     //use global form to access all the form values
     const formik = useFormik({
@@ -35,19 +37,33 @@ const Form = () => {
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
-        formik.setFieldValue("file", file);
-        //set file name
-        formik.setFieldValue("fileName", file?.name);
-        const fileSizeError = validateFileSize(file);
-        if (fileSizeError !== '') {
-            formik.setFieldError("file", fileSizeError);
+        if (file) {
+            const fileSizeError = validateFileSize(file);
+            if (fileSizeError !== '') {// error
+                formik.setFieldError("file", fileSizeError);
+            } else {//no error
+                formik.setFieldValue("file", file);
+                //set file name
+                const nameArray = file?.name?.split('.');
+                const extension = nameArray[nameArray.length - 1];
+                setFileExtension(extension);
+                const name = nameArray.filter(str => str !== extension).join('.');
+                formik.setFieldValue("fileName", name);
+            }
         }
     }
 
+    const handleEnableEdit = () => {
+        setEditFileName(!editFileName);
+    }
+
+    const onlyValidateForm = () => {
+        formik.validateForm();
+    }
 
     return (
-        <form action={saveFile} className='bg-none flex flex-col items-center gap-1'>
-            <div className="bg-none flex items-center gap-6 p-0 m-0">
+        <form action={saveFile} className='bg-none flex flex-col items-center gap-1' onSubmit={onlyValidateForm}>
+            <div className="bg-none flex items-center gap-6 p-0 m-0 max-w-[100%]">
                 <input
                     type="file"
                     id="file"
@@ -57,19 +73,44 @@ const Form = () => {
                     onChange={handleFileChange}
                 />
                 <div
-                    onClick={handleFileUpload}
-                    className="flex cursor-pointer gap-1 bg-card-foreground h-[60px] sm:h-[40px] min-w-[200px] sm:min-w-[300px] text-white border-none rounded-[5px] items-center p-[10px] transition-all hover:bg-primary"
+                    className="flex gap-3 bg-card-foreground h-[40px] sm:h-[50px] min-w-[200px] sm:min-w-[300px] text-white border-none rounded-[5px] items-center p-[10px] pr-0 transition-all"
                 >
-                    <Image
-                        src="/logo.svg"
-                        width={25}
-                        height={30}
-                        alt="Upload logo"
-                    />
-                    {!formik.values.file && "Upload File"}
-                    {formik.values.file && <Input type="text" value={formik.values.fileName} onChange={formik.handleChange} id="fileName" name="fileName" className="border-none bg-none text-white rounded-sm outline-none focus:outline-none" />}
+                    <div
+                        onClick={handleFileUpload}
+                        className={`flex cursor-pointer gap-1 h-full items-center justify-start ${!formik.values.file ? "flex-1" : ""}`}
+                    >
+                        <Image
+                            src="/logo.svg"
+                            width={25}
+                            height={30}
+                            alt="Upload logo"
+                        />
+                        {!formik.values.file && "Upload File"}
+                    </div>
+                    {formik.values.file &&
+                        <div className="flex p-0 h-[40px] sm:h-[50px] flex-1 gap-2 pr-[0] items-center bg-danger">
+                            <Input
+                                disabled={editFileName}
+                                type="text"
+                                value={formik.values.fileName}
+                                onChange={formik.handleChange}
+                                id="fileName" name="fileName"
+                                className="border-none text-white rounded-[5px] outline-none focus:outline-none focus:border-none shadow-none h-full bg-transparent d-flex items-start justify-start"
+                            />
+                            {fileExtension && <span>.{fileExtension}</span>}
+                            <button
+                                type="button"
+                                className="outline-none bg-success-light hover:bg-success transition-all border-none focus:outline-none min-w-[60px] px-[10px] h-full flex justify-center items-center cursor-pointer text-white rounded-[5px]"
+                                onClick={handleEnableEdit}
+                            >
+                                {editFileName ? <Image src="/edit.svg" alt="Edit icon" width={20} height={20} />
+                                    : "Save"
+                                }
+                            </button>
+                        </div>
+                    }
                 </div>
-                <button type="submit" className="rounded-[5px] text-white bg-primary h-[60px] sm:h-[40px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">save</button>
+                <button type="submit" className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
             </div>
             {formik.errors &&
                 <div className="m-0 p-0 w-full flex justify-start items-start flex-col">
