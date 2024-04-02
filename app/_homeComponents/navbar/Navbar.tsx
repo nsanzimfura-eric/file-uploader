@@ -1,5 +1,5 @@
 'use client'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image'
 import { useState } from 'react';
 

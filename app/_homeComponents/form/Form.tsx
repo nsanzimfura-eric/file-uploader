@@ -8,6 +8,7 @@ import { useFormik } from "formik";
 import FeedbackNotification from "@/components/pageComponents/FeedBackNotification";
 import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
+import { returnFileExtension } from "@/helpers/returnFileExtension";
 
 
 export interface DataFilesProps {
@@ -50,7 +51,7 @@ const Form = () => {
                 formik.setFieldValue("file", file);
                 //set file name
                 const fileParts = file.name.split('.');
-                const extension = fileParts.pop() as string;
+                const extension = returnFileExtension(file.name);
                 const fileName = fileParts.join('.');
                 setFileExtension(extension);
                 formik.setFieldValue("fileName", fileName);
@@ -126,8 +127,8 @@ const Form = () => {
                     {formik.errors.fileName &&
                         <FeedbackNotification title="Error" type="error" message={formik.errors.fileName} />
                     }
-                    {initialState.message !== '' &&
-                        <FeedbackNotification title="Upload Feedback" type="info" message={initialState.message} />
+                    {state.message !== '' &&
+                        <FeedbackNotification title="Upload Feedback" type="info" message={state.message} />
                     }
                 </div>}
         </form>
