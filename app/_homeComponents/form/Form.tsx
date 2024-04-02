@@ -9,6 +9,8 @@ import FeedbackNotification, { TitleType } from "@/components/pageComponents/Fee
 import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
 import { returnFileExtension } from "@/helpers/returnFileExtension";
+import { upload } from "@vercel/blob/client";
+import { PutBlobResult } from "@vercel/blob";
 
 
 export interface DataFilesProps {
@@ -28,6 +30,7 @@ const Form = () => {
     const [fileExtension, setFileExtension] = useState<string | null>(null);
     const [state, uploadFileAction] = useFormState(uploadFile, initialState);
     const { pending: uploadLoading } = useFormStatus();
+
 
 
     //use global form to access all the form values
@@ -53,7 +56,7 @@ const Form = () => {
                 formik.setFieldValue("file", file);
                 //set file name
                 const fileParts = file.name.split('.');
-                const extension = returnFileExtension(file.name);
+                const extension = fileParts.pop() as string;
                 const fileName = fileParts.join('.');
                 setFileExtension(extension);
                 formik.setFieldValue("fileName", fileName);
@@ -65,7 +68,7 @@ const Form = () => {
         setEditFileName(!editFileName);
     }
 
-    const onlyValidateForm = () => {
+    const onlyValidateForm = async () => {
         //validate Form first
         formik.validateForm();
     }
@@ -119,7 +122,7 @@ const Form = () => {
                         </div>
                     }
                 </div>
-                <button type="submit" aria-disabled={uploadLoading} className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
+                <button type="submit" aria-disabled={uploadLoading} disabled={formik.values.file === null} className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
             </div>
             {formik.errors &&
                 <div className="m-0 p-0 w-full flex justify-start items-start flex-col">

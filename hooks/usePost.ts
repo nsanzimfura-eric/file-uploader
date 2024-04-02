@@ -6,31 +6,25 @@ const useFetchData = () => {
   const [data, setData] = useState<ListBlobResultBlob[] | null>(null);
   const [error, setError] = useState<any>(null);
 
-  const fetchHandler = async () => {
+  const postHandler = async () => {
     setLoading(true);
     setError(null);
     setData(null);
 
     try {
-      const token = process.env.BLOB_READ_WRITE_TOKEN;
-      const options: any = {
-        token: "vercel_blob_rw_Zsg6kgSyZrPvqfSJ_erpMZk0f61miVEiexQBpPjXxDPmQFc",
-        mode: "no-cors",
-      };
-      console.log(token);
-      // const { blobs } = await list(options);
-      // setData(blobs);
+      const { blobs } = await list();
+      setData(blobs);
     } catch (err: any) {
       setError(err);
       console.error(err);
     } finally {
       setTimeout(() => {
         setLoading(false);
-      }, 4000);
+      }, 2000);
     }
   };
 
-  return { fetchHandler, data, loading, error };
+  return { postHandler, data, loading, error };
 };
 
 export default useFetchData;
