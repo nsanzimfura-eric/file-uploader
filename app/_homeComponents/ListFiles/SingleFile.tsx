@@ -13,20 +13,34 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from './valildationSchema'
+import deleteFile from "@/server-actions/file/DeleteFile";
+import { useFormState } from "react-dom";
+import { DataFilesProps } from "../form/Form";
 
 
 interface singleFileProps {
     file: ListBlobResultBlob;
 }
 
+
 const SingleFile = (props: singleFileProps) => {
+    const initialState: DataFilesProps = {
+        message: '',
+        type: 'success',
+    }
+
     const { file } = props;
     const fileExtension = returnFileExtension(file.pathname);
     const [loading, sestLoading] = useState(true);
     const [editFileName, setEditFileName] = useState(false);
+    const [state, formAction] = useFormState(deleteFile, initialState);
 
     const handleDeleteFile = () => {
-
+        formik.setFieldValue('deleteBlob', file.url);
+        sestLoading(true);
+        const formData = new FormData();
+        formData.append('deleteBlob', file.url);
+        formAction(formData)
     }
 
     useEffect(() => {
@@ -43,7 +57,7 @@ const SingleFile = (props: singleFileProps) => {
     const formik = useFormik({
         initialValues,
         validationSchema,
-        onSubmit: async (values) => {
+        onSubmit: async () => {
         },
     });
 
@@ -52,13 +66,28 @@ const SingleFile = (props: singleFileProps) => {
             // now we can edit
             formik.setFieldValue('blobName', file.pathname);
         }
-    }, [editFileName])
+    }, [editFileName]);
+
+
+    //show loading on detele
+    useEffect(() => {
+        if (state.message !== '') {
+            sestLoading(false)
+        }
+    }, [state.message]);
 
     return (loading ? <Loading /> :
-        <form className='h-auto sm:h-[70px] w-full rounded-[5px] items-center flex flex-col sm:flex-row gap-4 p-[10px] bg-white text-dark' onSubmit={formik.handleSubmit}>
+        <form action={formAction} className='h-auto sm:h-[70px] w-full rounded-[5px] items-center flex flex-col sm:flex-row gap-4 p-[10px] bg-white text-dark'>
             <Avatar className="bg-gray h-full  m-0 hidden sm:flex">
                 <AvatarFallback className="border border-success h-full aspect-square w-auto font-sm">.{fileExtension?.toUpperCase()}</AvatarFallback>
             </Avatar>
+            <input
+                name="deleteBlob"
+                id="deleteBlob"
+                value={file.url}
+                hidden
+                onChange={formik.handleChange}
+            />
             <div className="flex-1 flex flex-col gap-1">
                 {!editFileName && <a href={file.url} target="_blank" rel="noreferrer" className="flex-1 text-center">{file.pathname}</a>}
                 {editFileName &&
@@ -90,7 +119,7 @@ const SingleFile = (props: singleFileProps) => {
                         <ArrowLongDownIcon className="block h-6 w-6 text-white" aria-hidden="true" />
                     </a>
                 </button>
-                <button className="bg-none ms-auto h-full w-[30px] flex items-center justify-center" onClick={handleDeleteFile} >
+                <button type="submit" className="bg-none ms-auto h-full w-[30px] flex items-center justify-center" onClick={handleDeleteFile} >
                     <TrashIcon className="block h-6 w-6 text-error" aria-hidden="true" />
                 </button>
             </div>

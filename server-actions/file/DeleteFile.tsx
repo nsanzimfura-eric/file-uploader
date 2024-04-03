@@ -1,15 +1,19 @@
 "use server";
 
+import { del } from '@vercel/blob';
 import { DataFilesProps } from "@/app/_homeComponents/form/Form";
 import { frontendRoutes } from "@/vendor/frontendRoutes";
 import { revalidatePath } from "next/cache";
 
 const deleteFile = async (prevState: DataFilesProps, formData: FormData): Promise<DataFilesProps> => {
+    prevState.message = ''
+    const deleteBlob = await formData.get('deleteBlob') as string;
+    console.log(deleteBlob)
+
     try {
 
-
+        await del(deleteBlob);
         revalidatePath(frontendRoutes.home);
-
         prevState.message = 'File deleted Successfully'
         return prevState;
     } catch (error) {
