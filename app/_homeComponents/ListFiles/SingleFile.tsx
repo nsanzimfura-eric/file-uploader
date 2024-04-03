@@ -16,6 +16,7 @@ import { initialValues, validationSchema } from './valildationSchema'
 import deleteFile from "@/server-actions/file/DeleteFile";
 import { useFormState } from "react-dom";
 import { DataFilesProps } from "../form/Form";
+import { returnNameWithNoSpaces } from "@/helpers/returnNameWithNoSpaces";
 
 
 interface singleFileProps {
@@ -35,23 +36,6 @@ const SingleFile = (props: singleFileProps) => {
     const [editFileName, setEditFileName] = useState(false);
     const [state, formAction] = useFormState(deleteFile, initialState);
 
-    const handleDeleteFile = () => {
-        formik.setFieldValue('deleteBlob', file.url);
-        sestLoading(true);
-        const formData = new FormData();
-        formData.append('deleteBlob', file.url);
-        formAction(formData)
-    }
-
-    useEffect(() => {
-        setTimeout(() => {
-            sestLoading(false);
-        }, 3000)
-    }, [])
-
-    const handleEnableEdit = () => {
-        setEditFileName(prev => !prev)
-    }
     //formik for form edit
 
     const formik = useFormik({
@@ -60,6 +44,33 @@ const SingleFile = (props: singleFileProps) => {
         onSubmit: async () => {
         },
     });
+
+    const handleDeleteFile = () => {
+        localStorage.removeItem(file.url);
+
+        sestLoading(true);
+        const formData = new FormData();
+        formData.append('deleteBlob', file.url);
+        formAction(formData)
+    }
+
+    useEffect(() => {
+        // set each fileName with its blob name
+        const fileName = localStorage.getItem(file.url);
+        formik.setFieldValue('blobName', fileName ? fileName : file.pathname);
+        //wait to show skeleton
+        setTimeout(() => {
+            sestLoading(false);
+        }, 3000);
+
+    }, [])
+
+    const handleEnableEdit = () => {
+        setEditFileName(prev => !prev);
+        //save current status to the LS
+        localStorage.setItem(file.url, formik.values.blobName);
+    }
+
 
     useEffect(() => {
         if (editFileName) {
@@ -76,24 +87,22 @@ const SingleFile = (props: singleFileProps) => {
         }
     }, [state.message]);
 
+    //handle File dowbnload;
+    const handleDownload = () => {
+
+    }
+
     return (loading ? <Loading /> :
-        <form action={formAction} className='h-auto sm:h-[70px] w-full rounded-[5px] items-center flex flex-col sm:flex-row gap-4 p-[10px] bg-white text-dark'>
-            <Avatar className="bg-gray h-full  m-0 hidden sm:flex">
-                <AvatarFallback className="border border-success h-full aspect-square w-auto font-sm">.{fileExtension?.toUpperCase()}</AvatarFallback>
+        <form action={formAction} className='h-auto sm:h-[80px] w-full rounded-[5px] items-center flex flex-col sm:flex-row gap-4 p-[10px] bg-white text-dark'>
+            <Avatar className="bg-gray h-full bg-accent aspect-square w-auto p-0  m-0 hidden sm:flex">
+                <AvatarFallback className="h-full w-full aspect-square font-bold bg-transparent p-0 m-0 text-primary">.{fileExtension?.toUpperCase()}</AvatarFallback>
             </Avatar>
-            <input
-                name="deleteBlob"
-                id="deleteBlob"
-                value={file.url}
-                hidden
-                onChange={formik.handleChange}
-            />
             <div className="flex-1 flex flex-col gap-1">
-                {!editFileName && <a href={file.url} target="_blank" rel="noreferrer" className="flex-1 text-center">{file.pathname}</a>}
+                {!editFileName && <a href={file.url} target="_blank" rel="noreferrer" className="flex-1 text-center">{formik.values.blobName}</a>}
                 {editFileName &&
                     <Input
                         type="text"
-                        value={formik.values.blobName}
+                        value={returnNameWithNoSpaces(formik.values.blobName)}
                         onChange={formik.handleChange}
                         id="blobName" name="blobName"
                         className="text-primary bg-transparent focused h-[20px] border border-red-200"
@@ -114,10 +123,8 @@ const SingleFile = (props: singleFileProps) => {
             </div>
 
             <div className="w-full sm:w-auto flex justify-between  sm:gap-6">
-                <button type="button" className="p-10px bg-none sm:ms-auto h-full w-[30px] rounded-[5px] bg-success flex items-center justify-center">
-                    <a href={file.downloadUrl}>
-                        <ArrowLongDownIcon className="block h-6 w-6 text-white" aria-hidden="true" />
-                    </a>
+                <button type="button" className="p-10px bg-none sm:ms-auto h-full w-[30px] rounded-[5px] bg-success flex items-center justify-center" onClick={handleDownload}>
+                    <ArrowLongDownIcon className="block h-6 w-6 text-white" aria-hidden="true" />
                 </button>
                 <button type="submit" className="bg-none ms-auto h-full w-[30px] flex items-center justify-center" onClick={handleDeleteFile} >
                     <TrashIcon className="block h-6 w-6 text-error" aria-hidden="true" />

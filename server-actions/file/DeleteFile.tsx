@@ -8,7 +8,6 @@ import { revalidatePath } from "next/cache";
 const deleteFile = async (prevState: DataFilesProps, formData: FormData): Promise<DataFilesProps> => {
     prevState.message = ''
     const deleteBlob = await formData.get('deleteBlob') as string;
-    console.log(deleteBlob)
 
     try {
 

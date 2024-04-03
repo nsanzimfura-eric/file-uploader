@@ -9,6 +9,7 @@ import FeedbackNotification, { TitleType } from "@/components/pageComponents/Fee
 import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
 import ProgressBar from "@/components/pageComponents/ProgressBar";
+import { returnNameWithNoSpaces } from "@/helpers/returnNameWithNoSpaces";
 
 export interface DataFilesProps {
     message: string,
@@ -38,7 +39,7 @@ const Form = () => {
         onSubmit: async (values) => {
             const { fileName } = values;
             const file: File = values.file!;
-            let fileNameWithNoSpaces = fileName.replace(/\s+/g, '');
+            let fileNameWithNoSpaces = returnNameWithNoSpaces(fileName);
             const fullFileName = `${fileNameWithNoSpaces}.${fileExtension}`;
             const newFile = new File([file], fullFileName, {
                 type: file.type,
