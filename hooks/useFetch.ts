@@ -12,13 +12,7 @@ const useFetchData = () => {
     setData(null);
 
     try {
-      const token = process.env.BLOB_READ_WRITE_TOKEN;
-      const options: any = {
-        token: "vercel_blob_rw_Zsg6kgSyZrPvqfSJ_erpMZk0f61miVEiexQBpPjXxDPmQFc",
-        mode: "no-cors",
-      };
-      console.log(token);
-      const { blobs } = await list(options);
+      const { blobs } = await list();
       setData(blobs);
     } catch (err: any) {
       setError(err);

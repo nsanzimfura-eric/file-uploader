@@ -5,25 +5,18 @@ import { frontendRoutes } from "@/vendor/frontendRoutes";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from 'next/server';
 import { DataFilesProps } from '@/app/_homeComponents/form/Form';
-import { returnFileExtension } from '@/helpers/returnFileExtension';
 
 const uploadFile = async (prevState: DataFilesProps, formData: FormData): Promise<DataFilesProps> => {
     const file: File = await formData.get('file') as File;
-    const fileName: string = await formData.get('fileName') as string;
-    const extension = returnFileExtension(file.name);
-    const fullName = `${fileName}.${extension}`;
-    const newFile = { ...file, name: fullName, }
+
     try {
-        const blob = await put(fileName, newFile, {
+        const blob = await put(file.name, file, {
             access: 'public',
         });
 
         revalidatePath(frontendRoutes.home);
-
-        prevState.data = NextResponse.json(blob);
-        prevState.message = `File: ${fullName} Uploaded Successfully`;
-
-
+        prevState.data = blob;
+        prevState.message = `File: ${file.name} Uploaded Successfully`;
         return prevState;
 
     } catch (error) {

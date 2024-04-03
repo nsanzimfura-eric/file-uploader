@@ -1,9 +1,9 @@
 import Image from 'next/image';
 
-interface FooterProps { }
 
-const Footer = (props: FooterProps) => {
-    const { } = props;
+const Footer = () => {
+
+    const year = new Date().getFullYear();
     return (
         <footer className="bg-card-foreground w-full shadow m-0">
             <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
@@ -31,7 +31,7 @@ const Footer = (props: FooterProps) => {
                     </ul>
                 </div>
                 <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-                <span className="block text-sm text-white sm:text-center">© 2023 <a href="https://nsanzimfura.web.app/" className="hover:underline">File Uploader™</a>. All Rights Reserved.</span>
+                <span className="block text-sm text-white sm:text-center">© {year} <a href="https://nsanzimfura.web.app/" className="hover:underline">File Uploader™</a>. All Rights Reserved.</span>
             </div>
         </footer>
     );

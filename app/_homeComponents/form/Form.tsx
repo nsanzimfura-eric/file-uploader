@@ -8,10 +8,6 @@ import { useFormik } from "formik";
 import FeedbackNotification, { TitleType } from "@/components/pageComponents/FeedBackNotification";
 import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
-import { returnFileExtension } from "@/helpers/returnFileExtension";
-import { upload } from "@vercel/blob/client";
-import { PutBlobResult } from "@vercel/blob";
-
 
 export interface DataFilesProps {
     message: string,
@@ -38,7 +34,18 @@ const Form = () => {
         initialValues,
         validationSchema,
         onSubmit: async (values) => {
-            console.log(values, 'test values')
+            const { fileName } = values;
+            const file: File = values.file!;
+            let fileNameWithNoSpaces = fileName.replace(/\s+/g, '');
+            const fullFileName = `${fileNameWithNoSpaces}.${fileExtension}`;
+            const newFile = new File([file], fullFileName, {
+                type: file.type,
+                lastModified: file.lastModified,
+            });
+            const formData = new FormData();
+            formData.append('file', newFile);
+            //call server actions with form data
+            uploadFileAction(formData)
         },
     });
 
@@ -68,13 +75,9 @@ const Form = () => {
         setEditFileName(!editFileName);
     }
 
-    const onlyValidateForm = async () => {
-        //validate Form first
-        formik.validateForm();
-    }
-
     return (
-        <form action={uploadFileAction} className='bg-none flex flex-col items-center gap-1' onSubmit={onlyValidateForm}>
+        // I am calling github actions from form submission functions
+        <form className='bg-none flex flex-col items-center gap-1' onSubmit={formik.handleSubmit}>
             <div className="bg-none flex items-center gap-6 p-0 m-0 max-w-[100%]">
                 <input
                     type="file"

@@ -8,7 +8,7 @@ const Files = async (props: FilesProps) => {
     return (
         <div className='flex-1 m-0 p-0'>
             <Form />
-            <ListFiles />
+            {/* <ListFiles /> */}
         </div>
     );
 };
