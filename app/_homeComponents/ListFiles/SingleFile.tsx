@@ -98,7 +98,7 @@ const SingleFile = (props: singleFileProps) => {
 
     //handle File dowbnload;
     const handleDownload = () => {
-        downloadHandler(file, formik.values.blobName)
+        downloadHandler(file, `${formik.values.blobName}.${fileExtension}`);
     }
     //show alert error
     if (error) alert(error);
