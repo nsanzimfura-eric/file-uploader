@@ -28,9 +28,7 @@ const Form = () => {
     const [uploadLoading, setUploadLoading] = useState(false);
     const [fileExtension, setFileExtension] = useState<string | null>(null);
     const [state, uploadFileAction] = useFormState(uploadFile, initialState);
-    const { pending } = useFormStatus();
-
-
+    const [showState, setShowState] = useState(initialState);
 
     //use global form to access all the form values
     const formik = useFormik({
@@ -59,6 +57,7 @@ const Form = () => {
     }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setShowState(initialState);//clean previous response and wait another
         const file = event.currentTarget.files ? event.currentTarget.files[0] : null;
         if (file) {
             const fileSizeError = validateFileSize(file);
@@ -83,10 +82,18 @@ const Form = () => {
     useEffect(() => {
         if (state.message !== '') {
             setUploadLoading(false);
+            setShowState(state);
+            //reset form
+            if (state.type === 'success') {
+                //but wait to show the message
+                setTimeout(() => {
+                    formik.resetForm();
+                    setShowState(initialState);
+                }, 2000);
+            }
         }
-        //    const timer = setTimeout(() => {}, 400)
 
-    }, [state.message])
+    }, [state.message]);
 
     return (
         // NOTE:  @@ I am calling server actions from form submission functions!! This is because from nre GitHub Vercel/next.js discussion: https://github.com/vercel/next.js/discussions/50358
@@ -142,15 +149,15 @@ const Form = () => {
                 <button type="submit" aria-disabled={uploadLoading} disabled={(formik.values.file === null || uploadLoading)} className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
             </div>
             {uploadLoading && <ProgressBar loading={uploadLoading} />}
-            {formik.errors &&
+            {formik.values.file &&
                 <div className="m-0 p-0 w-full flex justify-start items-start flex-col">
-                    {formik.errors.file &&
+                    {formik.errors && formik.errors.file &&
                         <FeedbackNotification title="Error" type="error" message={formik.errors.file} />
                     }
-                    {formik.errors.fileName &&
+                    {formik.errors && formik.errors.fileName &&
                         <FeedbackNotification title="Error" type="error" message={formik.errors.fileName} />
                     }
-                    {state.message !== '' &&
+                    {showState.message !== '' &&
                         <FeedbackNotification title="Upload Feedback" type={state.type} message={state.message} />
                     }
                 </div>}

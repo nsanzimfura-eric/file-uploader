@@ -59,8 +59,11 @@ const SingleFile = (props: singleFileProps) => {
 
     useEffect(() => {
         // set each fileName with its blob name
-        const fileName = localStorage.getItem(file.url);
-        formik.setFieldValue('blobName', fileName ? fileName : file.pathname);
+        const name = localStorage.getItem(file.url);
+        const fileParts = file.pathname.split('.');
+        fileParts.pop() as string;// remove Extention
+        const fileName = fileParts.join('.');
+        formik.setFieldValue('blobName', name ? name : fileName);
         //wait to show skeleton
         setTimeout(() => {
             sestLoading(false);
@@ -78,7 +81,10 @@ const SingleFile = (props: singleFileProps) => {
     useEffect(() => {
         if (editFileName) {
             // now we can edit
-            formik.setFieldValue('blobName', file.pathname);
+            const fileParts = file.pathname.split('.');
+            fileParts.pop() as string;// remove Extention
+            const fileName = fileParts.join('.');
+            formik.setFieldValue('blobName', fileName);
         }
     }, [editFileName]);
 
@@ -103,7 +109,7 @@ const SingleFile = (props: singleFileProps) => {
                 <AvatarFallback className="h-full w-full aspect-square font-bold bg-transparent p-0 m-0 text-primary">.{fileExtension?.toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="flex-1 flex flex-col gap-1">
-                {!editFileName && <a href={file.url} target="_blank" rel="noreferrer" className="flex-1 text-center">{formik.values.blobName}</a>}
+                {!editFileName && <a href={file.url} target="_blank" rel="noreferrer" className="flex-1 text-center">{formik.values.blobName}.{fileExtension}</a>}
                 {editFileName &&
                     <Input
                         type="text"
