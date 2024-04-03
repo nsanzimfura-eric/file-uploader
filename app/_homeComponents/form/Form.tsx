@@ -91,7 +91,7 @@ const Form = () => {
         // NOTE:  @@ I am calling server actions from form submission functions!! This is because from nre GitHub Vercel/next.js discussion: https://github.com/vercel/next.js/discussions/50358
         //App Router: File Upload File objects are not supported #50358, we firstly need to imbed file object in formData then we call server actions
         <form className='bg-none flex flex-col items-center gap-1' onSubmit={formik.handleSubmit}>
-            <div className="bg-none flex items-center gap-6 p-0 m-0 max-w-[100%]">
+            <div className="bg-none flex flex-col sm:flex-row flex-wrap items-center gap-6 p-0 m-0 max-w-[100%]">
                 <input
                     type="file"
                     id="file"
@@ -101,7 +101,7 @@ const Form = () => {
                     onChange={handleFileChange}
                 />
                 <div
-                    className="flex gap-3 bg-card-foreground h-[40px] sm:h-[50px] min-w-[200px] sm:min-w-[300px] text-white border-none rounded-[5px] items-center p-[10px] pr-0 transition-all"
+                    className="flex flex-col sm:flex-row gap-3 bg-card-foreground h-auto  sm:h-[50px] min-w-[200px] sm:min-w-[300px] text-white border-none rounded-[5px] items-center p-[10px] pr-0 transition-all"
                 >
                     <div
                         onClick={handleFileUpload}
@@ -116,7 +116,7 @@ const Form = () => {
                         {!formik.values.file && "Upload File"}
                     </div>
                     {formik.values.file &&
-                        <div className="flex p-0 h-[40px] sm:h-[50px] flex-1 gap-2 pr-[0] items-center bg-danger">
+                        <div className="flex flex-col sm:flex-row p-0 h-auto sm:h-[50px] flex-1 gap-2 pr-[0] items-center bg-danger">
                             <Input
                                 disabled={editFileName}
                                 type="text"
