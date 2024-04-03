@@ -5,11 +5,24 @@ File Uploader is a web application built with Next.js 14.0.0, designed to simpli
 ## Features
 
 - `File Upload:` Users can upload files up to 5MB in size. For files larger than this limit, the application displays a modal indicating the file is too large.
+- `Change fileName and Download file:` User can change file namebefore and after uploading the file, and the download it with the new Name.
 - `Real-Time Notifications:` The app integrates with third-party APIs to send notifications at the start of an upload, upon success, and in case of failure.
 - `File Management:` Users can view a list of uploaded files, download them, rename them through a modal interface, or delete them.
 - `Persistence:` The state of uploaded files persists across page refreshes, ensuring data isn't lost.
 - `UI Feedback:` Displays a skeleton UI when the list of files is loading, enhancing the user experience.
 - `Error Handling:` Implements error boundaries to catch and display errors gracefully.
+
+## Projects Structure
+<img width="1920" height="800" alt="my VS code sreen shoot" src="https://github.com/nsanzimfura-eric/file-uploader/assets/91186046/76a905c1-b523-477c-a1e1-79af43eef1ee">
+
+From the folder structure above: Each folder contains its specifice files accordingly
+- ``app``: The main app route
+- ``components``:  global app compoents such as Loading, error, Notifcation and Shadcn components in ``/ui/`` folder
+- ``heplers``: Contains all the re-usable functions across the page
+- ``Hooks``: Deals with custom hooks for dealing with third party api
+- ``public``: Contains app public assests
+- ``Server-actions``: Contains all server actions for uploading file to vercel blob, deleteing file, etc
+- ``Vendor``: Contains Frontend api Routes, and you can put there backend routes if needed
 
 ## Getting Started
 
