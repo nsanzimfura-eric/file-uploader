@@ -17,6 +17,8 @@ import deleteFile from "@/server-actions/file/DeleteFile";
 import { useFormState } from "react-dom";
 import { DataFilesProps } from "../form/Form";
 import { returnNameWithNoSpaces } from "@/helpers/returnNameWithNoSpaces";
+import useDownloadFile from "@/hooks/useDownloadFile";
+import { Loader2 } from "lucide-react";
 
 
 interface singleFileProps {
@@ -35,6 +37,7 @@ const SingleFile = (props: singleFileProps) => {
     const [loading, sestLoading] = useState(true);
     const [editFileName, setEditFileName] = useState(false);
     const [state, formAction] = useFormState(deleteFile, initialState);
+    const { downloadHandler, loading: downloadLoading, error } = useDownloadFile()
 
     //formik for form edit
 
@@ -89,8 +92,10 @@ const SingleFile = (props: singleFileProps) => {
 
     //handle File dowbnload;
     const handleDownload = () => {
-
+        downloadHandler(file, formik.values.blobName)
     }
+    //show alert error
+    if (error) alert(error);
 
     return (loading ? <Loading /> :
         <form action={formAction} className='h-auto sm:h-[80px] w-full rounded-[5px] items-center flex flex-col sm:flex-row gap-4 p-[10px] bg-white text-dark'>
@@ -123,10 +128,18 @@ const SingleFile = (props: singleFileProps) => {
             </div>
 
             <div className="w-full sm:w-auto flex justify-between  sm:gap-6">
-                <button type="button" className="p-10px bg-none sm:ms-auto h-full w-[30px] rounded-[5px] bg-success flex items-center justify-center" onClick={handleDownload}>
-                    <ArrowLongDownIcon className="block h-6 w-6 text-white" aria-hidden="true" />
-                </button>
-                <button type="submit" className="bg-none ms-auto h-full w-[30px] flex items-center justify-center" onClick={handleDeleteFile} >
+                {downloadLoading &&
+                    <button type="button" disabled className="p-10px sm:ms-auto h-full w-[30px] rounded-[5px] bg-transparent flex items-center justify-center">
+                        {/* show loading */}
+                        <Loader2 className="h-8 w-8 animate-spin text-info" />
+                    </button>
+                }
+                {!downloadLoading &&
+                    <button type="button" className="p-10px sm:ms-auto h-full w-[30px] rounded-[5px] bg-success flex items-center justify-center" onClick={handleDownload}>
+                        <ArrowLongDownIcon className="block h-6 w-6 text-white" aria-hidden="true" />
+                    </button>
+                }
+                <button type="submit" className=" ms-auto h-full w-[30px] flex items-center justify-center bg-transparent" onClick={handleDeleteFile} >
                     <TrashIcon className="block h-6 w-6 text-error" aria-hidden="true" />
                 </button>
             </div>
