@@ -2,12 +2,13 @@
 
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { initialValues, validationSchema, validateFileSize } from './validationiSchama'
 import { useFormik } from "formik";
 import FeedbackNotification, { TitleType } from "@/components/pageComponents/FeedBackNotification";
 import { useFormState, useFormStatus } from "react-dom";
 import uploadFile from "@/server-actions/file/UploadFile";
+import ProgressBar from "@/components/pageComponents/ProgressBar";
 
 export interface DataFilesProps {
     message: string,
@@ -23,9 +24,10 @@ const Form = () => {
 
     const UploadRef = useRef<HTMLInputElement>(null);
     const [editFileName, setEditFileName] = useState(true);
+    const [uploadLoading, setUploadLoading] = useState(false);
     const [fileExtension, setFileExtension] = useState<string | null>(null);
     const [state, uploadFileAction] = useFormState(uploadFile, initialState);
-    const { pending: uploadLoading } = useFormStatus();
+    const { pending } = useFormStatus();
 
 
 
@@ -46,6 +48,8 @@ const Form = () => {
             formData.append('file', newFile);
             //call server actions with form data
             uploadFileAction(formData)
+            //set loading
+            setUploadLoading(true);
         },
     });
 
@@ -75,8 +79,17 @@ const Form = () => {
         setEditFileName(!editFileName);
     }
 
+    useEffect(() => {
+        if (state.message !== '') {
+            setUploadLoading(false);
+        }
+        //    const timer = setTimeout(() => {}, 400)
+
+    }, [state.message])
+
     return (
-        // I am calling github actions from form submission functions
+        // NOTE:  @@ I am calling server actions from form submission functions!! This is because from nre GitHub Vercel/next.js discussion: https://github.com/vercel/next.js/discussions/50358
+        //App Router: File Upload File objects are not supported #50358, we firstly need to imbed file object in formData then we call server actions
         <form className='bg-none flex flex-col items-center gap-1' onSubmit={formik.handleSubmit}>
             <div className="bg-none flex items-center gap-6 p-0 m-0 max-w-[100%]">
                 <input
@@ -125,8 +138,9 @@ const Form = () => {
                         </div>
                     }
                 </div>
-                <button type="submit" aria-disabled={uploadLoading} disabled={formik.values.file === null} className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
+                <button type="submit" aria-disabled={uploadLoading} disabled={(formik.values.file === null || uploadLoading)} className="rounded-[5px] text-white bg-primary h-[40px] sm:h-[50px] flex items-center justify-center p-[0px_20px] hover:bg-card-foreground transition-all">Upload</button>
             </div>
+            {uploadLoading && <ProgressBar loading={uploadLoading} />}
             {formik.errors &&
                 <div className="m-0 p-0 w-full flex justify-start items-start flex-col">
                     {formik.errors.file &&

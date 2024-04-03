@@ -3,7 +3,6 @@
 import { put } from '@vercel/blob';
 import { frontendRoutes } from "@/vendor/frontendRoutes";
 import { revalidatePath } from "next/cache";
-import { NextResponse } from 'next/server';
 import { DataFilesProps } from '@/app/_homeComponents/form/Form';
 
 const uploadFile = async (prevState: DataFilesProps, formData: FormData): Promise<DataFilesProps> => {
