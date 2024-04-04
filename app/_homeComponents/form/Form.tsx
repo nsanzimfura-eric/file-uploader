@@ -151,16 +151,17 @@ const Form = () => {
             {uploadLoading && <ProgressBar loading={uploadLoading} />}
             {formik.values.file &&
                 <div className="m-0 p-0 w-full flex justify-start items-start flex-col">
-                    {formik.errors && formik.errors.file &&
-                        <FeedbackNotification title="Error" type="error" message={formik.errors.file} />
-                    }
                     {formik.errors && formik.errors.fileName &&
                         <FeedbackNotification title="Error" type="error" message={formik.errors.fileName} />
                     }
                     {showState.message !== '' &&
                         <FeedbackNotification title="Upload Feedback" type={state.type} message={state.message} />
                     }
-                </div>}
+                </div>
+            }
+            {formik.errors && formik.errors.file &&
+                <FeedbackNotification title="Error" type="error" message={formik.errors.file} />
+            }
         </form>
     );
 };
